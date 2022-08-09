@@ -49,6 +49,9 @@ a {
   color: midnightblue;
   font-weight: bold;
 }
+a:hover {
+  font-size: 16.5px;
+}
 #description,
 h1,
 h2 {
