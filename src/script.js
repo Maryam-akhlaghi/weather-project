@@ -16,6 +16,11 @@ function getApi(cityName) {
 
 function showTemp(response) {
   console.log(response.data);
+  let cityName = response.data.name;
+  let currentCity = document.querySelectorAll("#current-city");
+  for (let i = 0; i < currentCity.length; i++) {
+    currentCity[i].innerHTML = cityName;
+  }
   let temp = Math.round(response.data.main.temp);
   let temperature = document.querySelector("#temp");
   temperature.innerHTML = ` ${temp}`;
@@ -32,13 +37,7 @@ function showTemp(response) {
   let wind = document.querySelector("#wind-speed");
   wind.innerHTML = Math.round(response.data.wind.speed);
 }
-function showCity(response) {
-  let cityName = response.data.name;
-  let currentCity = document.querySelectorAll("#current-city");
-  for (let i = 0; i < currentCity.length; i++) {
-    currentCity[i].innerHTML = cityName;
-  }
-}
+
 function findPosition(event) {
   event.preventDefault();
   navigator.geolocation.getCurrentPosition(getCurrentTemp);
@@ -49,27 +48,40 @@ function getCurrentTemp(position) {
   let apiKey = "b5a5a0f8c5c394e805798a731488bd78";
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
   axios.get(apiUrl).then(showTemp);
-  axios.get(apiUrl).then(showCity);
 }
-
-let now = new Date();
-let days = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-let day = days[now.getDay()];
-let hour = now.getHours();
-let minute = now.getMinutes();
-let time = document.querySelector("h4");
-time.innerHTML = `${day}  ${hour}:${minute}`;
-
+function time() {
+  let now = new Date();
+  let days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  let day = days[now.getDay()];
+  let hour = now.getHours();
+  if (hour < 10) {
+    hour = `0${hour}`;
+  }
+  let minute = now.getMinutes();
+  if (minute < 10) {
+    minute = `0${minute}`;
+  }
+  let second = now.getSeconds();
+  if (second < 10) {
+    second = `0${second}`;
+  }
+  let time = document.querySelector("h4");
+  time.innerHTML = `${day}  ${hour}:${minute}:${second}`;
+}
+time();
+setInterval(time, 1000);
 let form = document.querySelector("#search-form");
 form.addEventListener("submit", searchCity);
+
+getApi("yazd");
 
 let button = document.querySelector(".current");
 button.addEventListener("click", findPosition);
