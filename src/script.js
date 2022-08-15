@@ -15,7 +15,6 @@ function getApi(cityName) {
 }
 
 function showTemp(response) {
-  console.log(response.data);
   let cityName = response.data.name;
   let currentCity = document.querySelectorAll("#current-city");
   for (let i = 0; i < currentCity.length; i++) {
@@ -26,10 +25,10 @@ function showTemp(response) {
   temperature.innerHTML = ` ${temp}`;
   let country = document.querySelector("#current-country");
   country.innerHTML = response.data.sys.country;
-  let minTemp = document.querySelector("#min-temp");
-  minTemp.innerHTML = Math.round(response.data.main.temp_min);
-  let maxTemp = document.querySelector("#max-temp");
-  maxTemp.innerHTML = Math.round(response.data.main.temp_max);
+  let minmumTemp = document.querySelector("#min-temp");
+  minmumTemp.innerHTML = Math.round(response.data.main.temp_min);
+  let maximumTemp = document.querySelector("#max-temp");
+  maximumTemp.innerHTML = Math.round(response.data.main.temp_max);
   let humidity = document.querySelector("#humidity");
   humidity.innerHTML = response.data.main.humidity;
   let descript = document.querySelector("#description");
@@ -42,6 +41,9 @@ function showTemp(response) {
     `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
   );
   icon.setAttribute("alt", response.data.weather[0].description);
+  centigrade = response.data.main.temp;
+  document.querySelector("#centigrade").classList.add("active");
+  document.querySelector("#fahrenheit").classList.remove("active");
 }
 
 function findPosition(event) {
@@ -84,10 +86,30 @@ function time() {
 }
 time();
 setInterval(time, 1000);
+
+function convertToFahrenheit(event) {
+  event.preventDefault();
+  let fahrenheit = centigrade * 1.8 + 32;
+  document.querySelector("#temp").innerHTML = ` ${Math.round(fahrenheit)}`;
+  document.querySelector("#centigrade").classList.remove("active");
+  document.querySelector("#fahrenheit").classList.add("active");
+}
+function convertToCentigrade(event) {
+  event.preventDefault();
+  document.querySelector("#temp").innerHTML = ` ${Math.round(centigrade)}`;
+  document.querySelector("#fahrenheit").classList.remove("active");
+  document.querySelector("#centigrade").classList.add("active");
+}
 let form = document.querySelector("#search-form");
 form.addEventListener("submit", searchCity);
 
-getApi("yazd");
-
 let button = document.querySelector(".current");
 button.addEventListener("click", findPosition);
+
+let centigrade = null;
+getApi("yazd");
+
+let fahrenheitLink = document.querySelector("#fahrenheit");
+fahrenheitLink.addEventListener("click", convertToFahrenheit);
+let centigradeLink = document.querySelector("#centigrade");
+centigradeLink.addEventListener("click", convertToCentigrade);
