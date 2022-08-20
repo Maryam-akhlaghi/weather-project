@@ -2,9 +2,6 @@ p {
   font-size: 20px;
   font-weight: 600;
 }
-.card-title {
-  font-size: 25px;
-}
 
 video {
   position: fixed;
@@ -29,17 +26,6 @@ h4,
 
 .search-icon {
   color: midnightblue;
-}
-.sun-icon {
-  text-align: center;
-  font-size: 45px;
-  color: rgb(255, 223, 16);
-}
-
-.cloud-icon {
-  text-align: center;
-  font-size: 30px;
-  color: cornflowerblue;
 }
 a {
   text-decoration: none;

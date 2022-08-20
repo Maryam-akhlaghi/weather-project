@@ -15,6 +15,7 @@ function getApi(cityName) {
 }
 
 function showTemp(response) {
+  console.log(response.data);
   let cityName = response.data.name;
   let currentCity = document.querySelectorAll("#current-city");
   for (let i = 0; i < currentCity.length; i++) {
@@ -41,11 +42,18 @@ function showTemp(response) {
     `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
   );
   icon.setAttribute("alt", response.data.weather[0].description);
+  let lat = response.data.coord.lat;
+  let lon = response.data.coord.lon;
+  getForecastApi(lat, lon);
   centigrade = response.data.main.temp;
   document.querySelector("#centigrade").classList.add("active");
   document.querySelector("#fahrenheit").classList.remove("active");
 }
-
+function getForecastApi(lat, lon) {
+  let apiKey = "b5a5a0f8c5c394e805798a731488bd78";
+  let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+  axios.get(apiUrl).then(showForecast);
+}
 function findPosition(event) {
   event.preventDefault();
   navigator.geolocation.getCurrentPosition(getCurrentTemp);
@@ -99,6 +107,43 @@ function convertToCentigrade(event) {
   document.querySelector("#temp").innerHTML = ` ${Math.round(centigrade)}`;
   document.querySelector("#fahrenheit").classList.remove("active");
   document.querySelector("#centigrade").classList.add("active");
+}
+function formatDay(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+
+  return days[date.getDay()];
+}
+function showForecast(response) {
+  console.log(response.data);
+  let forecast = document.querySelector("#forecast");
+  let forecastElement = response.data.daily;
+  let forecastHTML = `<div class="card-group">`;
+  for (i = 1; i < 7; i++) {
+    let day = formatDay(forecastElement[i].dt);
+    forecastHTML =
+      forecastHTML +
+      ` <div class="card">
+    <div class="card-body">
+    <h5 class="card-title">${day}</h5>
+    <p class="card-text">${Math.round(forecastElement[i].temp.min)}
+      °C-${Math.round(forecastElement[i].temp.max)}°C</p>
+    <div class="icon" ><img src="http://openweathermap.org/img/wn/${
+      forecastElement[i].weather[0].icon
+    }@2x.png" , alt="${forecastElement[i].weather[0].description}"/> </div>
+    </div>
+    </div>`;
+  }
+  forecastHTML = forecastHTML + `</div>`;
+  forecast.innerHTML = forecastHTML;
 }
 let form = document.querySelector("#search-form");
 form.addEventListener("submit", searchCity);
