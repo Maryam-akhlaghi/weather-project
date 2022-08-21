@@ -15,7 +15,6 @@ function getApi(cityName) {
 }
 
 function showTemp(response) {
-  console.log(response.data);
   let cityName = response.data.name;
   let currentCity = document.querySelectorAll("#current-city");
   for (let i = 0; i < currentCity.length; i++) {
@@ -123,7 +122,6 @@ function formatDay(timestamp) {
   return days[date.getDay()];
 }
 function showForecast(response) {
-  console.log(response.data);
   let forecast = document.querySelector("#forecast");
   let forecastElement = response.data.daily;
   let forecastHTML = `<div class="card-group">`;
@@ -134,16 +132,23 @@ function showForecast(response) {
       ` <div class="card">
     <div class="card-body">
     <h5 class="card-title">${day}</h5>
-    <p class="card-text">${Math.round(forecastElement[i].temp.min)}
-      °C-${Math.round(forecastElement[i].temp.max)}°C</p>
+    <p class="card-text">${Math.round(
+      forecastElement[i].temp.min
+    )}° C - ${Math.round(forecastElement[i].temp.max)}° C</p>
     <div class="icon" ><img src="http://openweathermap.org/img/wn/${
       forecastElement[i].weather[0].icon
-    }@2x.png" , alt="${forecastElement[i].weather[0].description}"/> </div>
+    }@2x.png" , alt="${
+        forecastElement[i].weather[0].description
+      }"/> </div> <div class="forecast-desc">${
+        forecastElement[i].weather[0].description
+      }</div>
     </div>
     </div>`;
   }
   forecastHTML = forecastHTML + `</div>`;
   forecast.innerHTML = forecastHTML;
+  let uvIndex = document.querySelector("#uv-index");
+  uvIndex.innerHTML = `UV Index : ${response.data.current.uvi}`;
 }
 let form = document.querySelector("#search-form");
 form.addEventListener("submit", searchCity);
